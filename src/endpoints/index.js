@@ -10,5 +10,6 @@ router.get('/surveys/:surveyId', controller.getSurvey);
 router.get('/surveys/:surveyId/responed', controller.createResponedForm);
 router.get('/surveys', controller.getAllSurveys);
 router.post('/surveys/:surveyId/responed', controller.createResponed);
+router.get('/surveys/:surveyId/getData', controller.getQuestionsData);
 
 module.exports = router;
