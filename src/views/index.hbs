@@ -1,0 +1,40 @@
+<p>
+    Surveys'
+</p>
+<a class="btn btn-primary" href="/surveys/create">Create Survey</a>
+
+<br>
+<br>
+
+
+<table class="table table-hover">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>
+                Operations
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#each survey }}
+        <tr>
+            <td>{{ this.name }}</td>
+            <td>{{ this.title }}</td>
+            <td>
+                <a class="btn btn-primary" href="/surveys/{{ this._id }}">
+                    show
+                </a>
+
+                <a class="btn btn-primary" href="/surveys/{{ this._id }}/responed">
+                    Responed
+                </a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+
+</table>

@@ -1,0 +1,37 @@
+<div class="card">
+    <div class="card-header">
+        <h3>Response</h3>
+    </div>
+
+    <div class="card-body">
+
+        <form method="POST" action="/surveys/{{ this.survey._id }}/responed" class="form-horizontal">
+
+            {{#each this.survey.questions as | question index |}}
+
+            <div class="form-group">
+                <input type="hidden" name="responses[{{index}}][questionId]" value="{{ this._id }}">
+
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <b>Question:</b> {{ question.body }}
+                    </li>
+                    {{#each question.options}}
+                    <li class="list-group-item">
+                        <div class="form-check">
+                            <input id="{{this._id}}" value="{{this._id}}" type="radio" class="form-check-input" name="responses[{{@index}}][optionId]"
+                                required>
+                            <label for="{{this._id}}" class="form-check-label">{{ this.title }}</label>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+
+            </div>
+
+            {{/each}}
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
+const ObjectId = Schema.Types.ObjectId;
 
 let ReplySchema = new Schema({
-	questionId: { type: ObjectId, ref: 'QuestionSchema' },
-	reply: { type: String, required: true, max: 100 }
+  question: String,
+  option: String
 });
 
 let ResponedSchema = new Schema({
-	surveryId: { type: ObjectId, ref: 'SurverySchema' },
-	replies: [ ReplySchema ]
+  survey: { type: ObjectId, ref: 'Survey' },
+  replies: [ReplySchema]
 });
 
-module.exports = mongoose.model('Responed', ResponedSchema);
+module.exports = {
+  Responed: mongoose.model('Responed', ResponedSchema, 'responeds'),
+  Reply: mongoose.model('Reply', ReplySchema)
+};

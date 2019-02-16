@@ -1,76 +1,118 @@
 const { Survey, Responed } = require('../models');
+const { formatQusetions, createReplies } = require('../utlis');
+
+const getAllSurveys = async (req, res, next) => {
+  const survey = await Survey.find();
+
+  return res.render('index', {
+    survey
+  });
+};
 
 const createSurvey = async (req, res, next) => {
-	try {
-		const { questions } = req.body;
+  try {
+    const { questions, name, title } = req.body;
 
-		const survey = new Survey({
-			questions: questions.map((question) => {
-				question.counts = 0;
-				return question;
-			})
-		});
-		await survey.save();
+    const survey = new Survey({
+      name,
+      title,
+      questions: formatQusetions(questions)
+    });
+    await survey.save();
 
-		return res.status(201).json({
-			message: 'Survey created successfully.'
-		});
-	} catch (err) {
-		return res.status(400).json({
-			error: err.message ? err.message : 'Something wrong happend'
-		});
-	}
+    return res.redirect('/surveys');
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message ? err.message : 'Something wrong happend'
+    });
+  }
 };
 
 const createResponed = async (req, res, next) => {
-	try {
-		const { responses, surveryId } = req.body;
+  try {
+    const { surveyId } = req.params;
+    const { responses } = req.body;
 
-		const survey = await Survey.findOne({ _id: surveryId });
-		await responses.map(async (response) => {
-			const question = survey.questions.filter((q) => q._id == response.questionId)[0];
-			await Survey.update(
-				{ _id: surveryId, 'questions._id': response.questionId },
-				{
-					$set: {
-						'questions.$.counts': question.counts + 1
-					}
-				}
-			);
-		});
+    const survey = await Survey.findOne({ _id: surveyId });
+    const mappedRes = createReplies(responses, survey);
 
-		const newResponse = new Responed({
-			replies: responses,
-			surveryId
-		});
-		await newResponse.save();
+    await responses.map(async response => {
+      const question = survey.questions.filter(
+        q => q._id == response.questionId
+      )[0];
+      await Survey.update(
+        { _id: surveyId, 'questions._id': response.questionId },
+        {
+          $set: {
+            'questions.$.counts': question.counts + 1
+          }
+        }
+      );
+    });
 
-		return res.status(201).json({
-			message: 'Responds created successfully.'
-		});
-	} catch (err) {
-		return res.status(400).json({
-			error: err.message ? err.message : 'Something wrong happend'
-		});
-	}
+    const newResponse = new Responed({
+      replies: mappedRes,
+      survey: surveyId
+    });
+    await newResponse.save();
+
+    return res.redirect('/surveys/' + surveyId);
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message ? err.message : 'Something wrong happend'
+    });
+  }
+};
+
+const redirectToSurveys = (req, res, next) => {
+  return res.redirect('/surveys');
 };
 
 const getSurvey = async (req, res, next) => {
-	try {
-		const { surveryId } = req.params;
+  try {
+    const { surveyId } = req.params;
 
-		const survey = await Survey.find({ _id: surveryId });
+    const surveyData = {};
+    surveyData.survey = await Survey.findOne({ _id: surveyId });
+    surveyData.responses = await Responed.find({
+      survey: surveyId
+    });
 
-		return res.status(200).json(survey);
-	} catch (err) {
-		return res.status(400).json({
-			error: err.message ? err.message : 'Something wrong happend'
-		});
-	}
+    return res.render('survey', {
+      surveyData
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message ? err.message : 'Something wrong happend'
+    });
+  }
+};
+
+const createSurveyForm = (req, res, next) => {
+  return res.render('createSurvey');
+};
+
+const createResponedForm = async (req, res, next) => {
+  try {
+    const { surveyId } = req.params;
+    const survey = await Survey.findOne({ _id: surveyId });
+
+    return res.render('createRespond', {
+      survey
+    });
+  } catch (err) {
+    return res.status(400).json({
+      error: err.message ? err.message : 'Something wrong happend'
+    });
+  }
 };
 
 module.exports = {
-	createSurvey,
-	createResponed,
-	getSurvey
+  createSurvey,
+  createSurveyForm,
+  createResponed,
+  createResponedForm,
+  getSurvey,
+  getAllSurveys,
+  redirectToSurveys
 };

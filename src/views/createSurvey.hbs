@@ -1,0 +1,19 @@
+<form method="POST" action="/surveys" class="form-horizontal">
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input name="name" type="text" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input name="title" type="text" class="form-control" required />
+    </div>
+
+    <button type="button" class="mr-btm-10 btn btn-default" id="addQuestion">
+        Add Question
+    </button>
+    <div id="questions">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

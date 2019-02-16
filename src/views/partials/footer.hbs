@@ -1,0 +1,34 @@
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+<script>
+    $(() => {
+        let i = 0;
+        $("#addQuestion").on('click', (e) => {
+            $("#questions").prepend(`
+                <div class="card mr-btm-10">
+                    <div class="card-header">
+                        <h3>Question ` + (i + 1) + `</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="body">Body</label>
+                            <input name="questions[` + i + `][body]" type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="options">Options</label>
+                            <textarea placeholder="Please, enter multiple options seperated by a comma." class="form-control" name="questions[` + i + `][options]" cols="30" rows="5" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            `);
+            ++i;
+        });
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    <b>{{ this.surveyData.survey.title }}</b>
+                </h3>
+                <p class="card-text">{{ this.surveyData.survey.name }}</p>
+
+                <hr>
+
+                <h4 class="text-primary">Questions: </h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Question Body</th>
+                            <th>Qution Options</th>
+                            <th>Replies Count</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {{#each this.surveyData.survey.questions}}
+
+                        <tr>
+                            <td>{{ this.body }}</td>
+                            <td>{{ optionsHelper this.options }}</td>
+                            <td>{{ this.counts }}</td>
+                        </tr>
+
+                        {{/each}}
+
+                    </tbody>
+
+                </table>
+
+                <hr>
+
+                <h4 class="text-primary">Responses: </h4>
+                <br>
+                {{#each this.surveyData.responses}}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Question </th>
+                            <th>Option </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{#each this.replies}}
+                        <tr>
+                            <td>{{ this.question }}</td>
+                            <td>{{ this.option }}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+
+                </table>
+                <br>
+
+                {{/each}}
+
+            </div>
+        </div>
+    </div>
+</div>
